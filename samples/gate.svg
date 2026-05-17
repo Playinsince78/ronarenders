@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600">
+  <!-- Outer frame (rectangle with rectangular hole, evenodd) -->
+  <path fill="#2b2b2b" fill-rule="evenodd"
+        d="M10 10 H390 V590 H10 Z M30 30 H370 V570 H30 Z"/>
+
+  <!-- Top arched header decoration -->
+  <path fill="#2b2b2b"
+        d="M30 90 Q200 30 370 90 L370 110 Q200 50 30 110 Z"/>
+
+  <!-- Top crossbar -->
+  <rect x="30" y="120" width="340" height="8" fill="#2b2b2b"/>
+
+  <!-- Bottom crossbar -->
+  <rect x="30" y="500" width="340" height="8" fill="#2b2b2b"/>
+
+  <!-- Vertical bars -->
+  <rect x="75"  y="128" width="8" height="372" fill="#2b2b2b"/>
+  <rect x="125" y="128" width="8" height="372" fill="#2b2b2b"/>
+  <rect x="175" y="128" width="8" height="372" fill="#2b2b2b"/>
+  <rect x="217" y="128" width="8" height="372" fill="#2b2b2b"/>
+  <rect x="267" y="128" width="8" height="372" fill="#2b2b2b"/>
+  <rect x="317" y="128" width="8" height="372" fill="#2b2b2b"/>
+
+  <!-- Centre ring medallion (donut with evenodd) -->
+  <path fill="#2b2b2b" fill-rule="evenodd"
+        d="M150 250 a50 50 0 1 0 100 0 a50 50 0 1 0 -100 0 Z
+           M170 250 a30 30 0 1 1 60 0 a30 30 0 1 1 -60 0 Z"/>
+
+  <!-- Decorative scrollwork — left S-curve -->
+  <path fill="#2b2b2b" fill-rule="evenodd"
+        d="M50 360 a30 30 0 1 0 60 0 a30 30 0 1 0 -60 0 Z
+           M65 360 a15 15 0 1 1 30 0 a15 15 0 1 1 -30 0 Z"/>
+
+  <!-- Decorative scrollwork — right S-curve -->
+  <path fill="#2b2b2b" fill-rule="evenodd"
+        d="M290 360 a30 30 0 1 0 60 0 a30 30 0 1 0 -60 0 Z
+           M305 360 a15 15 0 1 1 30 0 a15 15 0 1 1 -30 0 Z"/>
+
+  <!-- Diamond accent at top centre -->
+  <path fill="#2b2b2b"
+        d="M200 145 L222 175 L200 205 L178 175 Z"/>
+</svg>
