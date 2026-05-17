@@ -79,6 +79,21 @@
       transition: background 0.15s;
     }
     #gate button:hover { background: #000; }
+    #gate .gate-pdf {
+      margin-top: 22px;
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+      letter-spacing: 0.02em;
+    }
+    #gate .gate-pdf span { display: block; margin-bottom: 6px; opacity: 0.6; }
+    #gate .gate-pdf a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--hair);
+      padding-bottom: 1px;
+      transition: border-color 0.15s;
+    }
+    #gate .gate-pdf a:hover { border-bottom-color: var(--ink); }
 
     /* ── Top wordmark bar ────────────────────────────────────────── */
     header.bar {
@@ -105,6 +120,16 @@
       font-size: 0.78rem; letter-spacing: 0.12em;
       text-transform: uppercase; color: var(--ink-soft);
     }
+    .bar-right {
+      display: flex; align-items: baseline; gap: 22px;
+    }
+    .bar-right a.action {
+      font-size: 0.72rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--ink-soft);
+      text-decoration: none; cursor: pointer;
+      transition: color 0.15s;
+    }
+    .bar-right a.action:hover { color: var(--ink); }
 
     /* ── Layout primitives ───────────────────────────────────────── */
     main { padding: 0 0 120px; }
@@ -313,6 +338,10 @@
       <p>This proposal is shared privately for review.<br>Please enter the password to continue.</p>
       <input id="gate-input" type="password" placeholder="Password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
       <button id="gate-submit">Enter</button>
+      <div class="gate-pdf">
+        <span>or</span>
+        <a href="Rona_Smith_Springfield_Village_Proposal.pdf" download>Download the PDF</a>
+      </div>
     </div>
   </div>
 
@@ -320,7 +349,11 @@
   <header class="bar">
     <div class="inner">
       <a href="#top" class="wordmark">Rona</a>
-      <nav>Springfield Village Southern Gateway</nav>
+      <div class="bar-right">
+        <nav>Springfield Village Southern Gateway</nav>
+        <a href="Rona_Smith_Springfield_Village_Proposal.pdf" download class="action" title="Download the PDF version">PDF</a>
+        <a href="#" id="logout" class="action" title="Log out">Log out</a>
+      </div>
     </div>
   </header>
 
@@ -742,6 +775,14 @@
     document.getElementById('gate-submit').addEventListener('click', tryUnlock);
     document.getElementById('gate-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') tryUnlock();
+    });
+
+    // Logout
+    document.getElementById('logout').addEventListener('click', e => {
+      e.preventDefault();
+      sessionStorage.removeItem(STORAGE_KEY);
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      location.reload();
     });
 
     // Header scroll effect
