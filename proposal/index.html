@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <title>Springfield Village Southern Gateway — Rona Smith</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAFAF7;
+      --ink: #1a1a1a;
+      --ink-soft: #6b6b6b;
+      --hair: rgba(0,0,0,0.12);
+      --max: 760px;
+      --max-wide: 1120px;
+      --serif: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 17px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ── Password gate ───────────────────────────────────────────── */
+    #gate {
+      position: fixed; inset: 0; z-index: 1000;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    #gate.unlocked { display: none; }
+    #gate .card {
+      max-width: 360px; width: 100%; text-align: center;
+    }
+    #gate .word {
+      font-family: var(--serif); font-weight: 300;
+      font-size: 1.4rem; letter-spacing: 0.45em;
+      margin: 0 0 32px; text-transform: uppercase;
+    }
+    #gate h1 {
+      font-family: var(--serif); font-weight: 300;
+      font-size: 1.5rem; margin: 0 0 8px;
+    }
+    #gate p {
+      color: var(--ink-soft); font-size: 0.92rem;
+      margin: 0 0 24px;
+    }
+    #gate input {
+      width: 100%; padding: 12px 14px;
+      border: 1px solid var(--hair);
+      background: #fff;
+      font-family: var(--sans); font-size: 0.95rem;
+      border-radius: 4px; outline: none;
+      transition: border-color 0.15s;
+    }
+    #gate input:focus { border-color: var(--ink); }
+    #gate input.error { border-color: #b94a4a; animation: shake 0.32s; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+    #gate button {
+      width: 100%; padding: 12px 14px; margin-top: 10px;
+      background: var(--ink); color: #fff; border: 0;
+      font-family: var(--sans); font-size: 0.92rem;
+      letter-spacing: 0.04em; cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+    #gate button:hover { background: #000; }
+
+    /* ── Top wordmark bar ────────────────────────────────────────── */
+    header.bar {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(250, 250, 247, 0.88);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    header.bar.scrolled { border-bottom-color: var(--hair); }
+    header.bar .inner {
+      max-width: var(--max-wide); margin: 0 auto;
+      padding: 18px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .wordmark {
+      font-family: var(--serif); font-weight: 300;
+      font-size: 1.15rem; letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--ink); text-decoration: none;
+    }
+    header.bar nav {
+      font-size: 0.78rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--ink-soft);
+    }
+
+    /* ── Layout primitives ───────────────────────────────────────── */
+    main { padding: 0 0 120px; }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+    .wide { max-width: var(--max-wide); margin: 0 auto; padding: 0 28px; }
+
+    section.page {
+      padding: 96px 0;
+      border-top: 1px solid var(--hair);
+    }
+    section.page:first-of-type { border-top: 0; }
+
+    .eyebrow {
+      font-family: var(--sans); font-size: 0.72rem;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--ink-soft); margin: 0 0 18px;
+    }
+    .eyebrow .num { color: var(--ink); margin-right: 14px; font-weight: 500; }
+
+    h1.title, h2.title, h3.title {
+      font-family: var(--serif); font-weight: 300;
+      letter-spacing: -0.005em;
+      line-height: 1.15; margin: 0 0 28px;
+    }
+    h1.title { font-size: clamp(2.2rem, 5vw, 3.4rem); }
+    h2.title { font-size: clamp(1.7rem, 3.6vw, 2.4rem); }
+    h3.title { font-size: 1.25rem; margin: 0 0 14px; }
+
+    .lede {
+      font-family: var(--serif); font-weight: 300;
+      font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+      line-height: 1.45; color: var(--ink);
+      margin: 0 0 36px;
+    }
+    p { margin: 0 0 1em; }
+    p:last-child { margin-bottom: 0; }
+
+    .subhead {
+      font-family: var(--sans); font-size: 0.95rem;
+      font-weight: 600; letter-spacing: 0.02em;
+      margin: 28px 0 10px;
+    }
+    .caption {
+      font-family: var(--sans); font-size: 0.78rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--ink-soft); margin-top: 12px;
+    }
+
+    /* ── Hero ────────────────────────────────────────────────────── */
+    section.hero {
+      padding: 120px 0 0;
+    }
+    section.hero .label {
+      font-family: var(--sans); font-size: 0.72rem;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ink-soft); margin-bottom: 14px;
+    }
+    section.hero h1 {
+      font-family: var(--serif); font-weight: 300;
+      font-size: clamp(2.4rem, 6.5vw, 4.6rem);
+      line-height: 1.05; letter-spacing: -0.01em;
+      margin: 0 0 18px;
+    }
+    section.hero .byline {
+      font-family: var(--serif); font-weight: 300;
+      font-size: 1.15rem; color: var(--ink-soft);
+      margin: 0 0 60px;
+    }
+    section.hero .hero-img {
+      width: 100%; height: auto;
+      display: block;
+      margin: 24px 0 0;
+    }
+
+    /* ── Image blocks ────────────────────────────────────────────── */
+    figure { margin: 36px 0; }
+    figure img {
+      width: 100%; height: auto; display: block;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 36px 0;
+    }
+    .grid-2 img { width: 100%; height: auto; display: block; }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .grid-3 img { width: 100%; height: auto; display: block; }
+
+    /* ── 3D embed + spec sidebar ─────────────────────────────────── */
+    .viewer-block {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+      gap: 32px;
+      align-items: start;
+      margin: 32px 0;
+    }
+    .viewer-frame {
+      background: #FAFAF7;
+      border: 1px solid var(--hair);
+      border-radius: 4px;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+    }
+    .viewer-frame iframe {
+      width: 100%; height: 100%; border: 0; display: block;
+    }
+    .specs h3 {
+      font-family: var(--sans); font-size: 0.72rem;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--ink-soft); margin: 0 0 14px;
+      font-weight: 500;
+    }
+    .specs dl {
+      margin: 0 0 28px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: 16px; row-gap: 8px;
+      font-size: 0.92rem;
+    }
+    .specs dt { color: var(--ink-soft); }
+    .specs dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+    .specs .note {
+      font-size: 0.86rem; color: var(--ink-soft);
+      line-height: 1.55; margin-top: 12px;
+    }
+
+    /* ── Tables ──────────────────────────────────────────────────── */
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 24px 0;
+    }
+    th, td {
+      padding: 14px 16px; text-align: left;
+      border-bottom: 1px solid var(--hair);
+      vertical-align: top;
+    }
+    th {
+      font-family: var(--sans); font-weight: 500;
+      font-size: 0.72rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--ink-soft);
+    }
+    table .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    tfoot td { font-weight: 600; border-top: 1px solid var(--ink); border-bottom: 0; padding-top: 16px; }
+    tfoot td.num { font-weight: 600; }
+
+    /* ── Risk list ───────────────────────────────────────────────── */
+    .risks dt {
+      font-weight: 500; margin-top: 22px;
+    }
+    .risks dt::before { content: "Risk —  "; color: var(--ink-soft); font-weight: 400; }
+    .risks dd { margin: 6px 0 0; color: var(--ink-soft); }
+    .risks dd::before { content: "Mitigation —  "; color: var(--ink); font-weight: 500; }
+
+    /* ── Two-col flow for project programme ──────────────────────── */
+    .twocol {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 48px;
+      align-items: start;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────── */
+    footer {
+      max-width: var(--max-wide); margin: 0 auto;
+      padding: 48px 28px 64px;
+      border-top: 1px solid var(--hair);
+      font-size: 0.78rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--ink-soft);
+      display: flex; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+
+    /* ── Mobile ──────────────────────────────────────────────────── */
+    @media (max-width: 800px) {
+      section.page { padding: 64px 0; }
+      section.hero { padding: 72px 0 0; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .viewer-block { grid-template-columns: 1fr; }
+      .twocol { grid-template-columns: 1fr; gap: 32px; }
+      .wrap, .wide, header.bar .inner, footer { padding-left: 22px; padding-right: 22px; }
+    }
+
+    @media (max-width: 480px) {
+      body { font-size: 16px; }
+      header.bar .inner { padding-top: 14px; padding-bottom: 14px; }
+      .wordmark { font-size: 1rem; letter-spacing: 0.4em; }
+      header.bar nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── Password gate ─────────────────────────────────────────── -->
+  <div id="gate" aria-label="Password protected">
+    <div class="card">
+      <div class="word">Rona</div>
+      <h1>Private review</h1>
+      <p>This proposal is shared privately for review.<br>Please enter the password to continue.</p>
+      <input id="gate-input" type="password" placeholder="Password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+      <button id="gate-submit">Enter</button>
+    </div>
+  </div>
+
+  <!-- ─── Top bar ───────────────────────────────────────────────── -->
+  <header class="bar">
+    <div class="inner">
+      <a href="#top" class="wordmark">Rona</a>
+      <nav>Springfield Village Southern Gateway</nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="label">Proposal · Public Art Commission</div>
+        <h1>Springfield Village<br>Southern Gateway</h1>
+        <div class="byline">Rona Smith</div>
+      </div>
+      <div class="wide">
+        <img src="img/img-000.jpg" alt="Springfield Village gate model" class="hero-img">
+      </div>
+      <div class="wrap" style="margin-top: 48px;">
+        <p class="lede">A physical model of the proposed gateway is at the AND office. The model can be handled — the gate opens by hand, and the proposal can be viewed from different angles.</p>
+      </div>
+    </section>
+
+    <!-- 01 · TEAM -->
+    <section class="page">
+      <div class="wrap">
+        <div class="eyebrow"><span class="num">01</span>Team</div>
+        <h2 class="title">A team of skilled, trusted collaborators.</h2>
+        <p>I have built a team of skilled, trusted collaborators who have all worked extensively with me to manage and fabricate my previous public artworks.</p>
+
+        <h3 class="subhead">Fabrication</h3>
+        <p>Benson Sedgwick Engineering<br>Selinas Lane, Dagenham RM8<br><span style="color:var(--ink-soft)">A regular collaborator and fabricator of my previous gates.</span></p>
+
+        <h3 class="subhead">Powder coating</h3>
+        <p>Bradleys Metal Finishers<br>49 Knightsdale Road, Ipswich IP1<br><span style="color:var(--ink-soft)">A regular collaborator who painted and powder coated several of my previous commissions.</span></p>
+
+        <h3 class="subhead">Structural engineering</h3>
+        <p>Fold Engineering<br>4 Beau Street, Bath BA1<br><span style="color:var(--ink-soft)">A regular collaborator who has carried out calculations for many previous projects.</span></p>
+      </div>
+      <div class="wide">
+        <div class="grid-2">
+          <img src="img/img-001.jpg" alt="Previous gate commission">
+          <img src="img/img-002.jpg" alt="Previous gate commission">
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 · CONCEPT STATEMENT -->
+    <section class="page">
+      <div class="wrap">
+        <div class="eyebrow"><span class="num">02</span>Concept Statement</div>
+        <h2 class="title">Inspiration.</h2>
+        <p class="lede">My design responds directly to the history of the site, as well as the atmosphere and identity of the new development. By embedding some of the lesser-known stories from the past into the design, the proposal becomes meaningful and locally relevant.</p>
+        <p>I visited the Wandsworth archives, which holds a fascinating range of information about the history of the Springfield hospital in the form of newspaper cuttings, books and photographs. I discovered that between 1841 and 1948 the hospital ran the only working farm in London.</p>
+      </div>
+      <div class="wide">
+        <div class="grid-2">
+          <img src="img/img-003.jpg" alt="Archival research">
+          <img src="img/img-004.jpg" alt="Archival newspaper article">
+        </div>
+        <p class="caption">An archival journalist's account describes a visit to the hospital where patients were encouraged to engage in farmwork as part of its rehabilitation scheme.</p>
+      </div>
+    </section>
+
+    <!-- 03 · THEME -->
+    <section class="page">
+      <div class="wrap">
+        <div class="eyebrow"><span class="num">03</span>Theme</div>
+        <h2 class="title">The apple, and its segments.</h2>
+        <p>I discovered that the farm included an orchard, which inspired me to use the form of an apple and its segments as a starting point for the design. The form is built from a series of stacked apples with a geometric lattice across each one — inspired by my drawings of cut apple segments and their seed casings.</p>
+      </div>
+      <div class="wide">
+        <div class="grid-2">
+          <img src="img/img-005.jpg" alt="Apple sketch and segments">
+          <img src="img/img-006.jpg" alt="Gate model showing apple lattice">
+        </div>
+      </div>
+      <div class="wrap">
+        <p>The brief states that the new development will foster a greater understanding of mental health and reduce associated stigma. Here, the apple serves as a symbol of health and wellbeing — reflecting the ambitions of the development as a place where barriers are broken down to create a more inclusive environment for those suffering from mental health issues.</p>
+        <p>The nutrients in apples — vitamin C, polyphenols, quercetin — are linked to brain health. The wholesome benefits of "an apple a day" have given rise to a popular mindfulness technique: APPLE is an acronym for five stages of dealing with unhelpful or intrusive thoughts and feelings — <em>Acknowledge, Pause, Pull back, Let go and Explore</em>. The final Explore stage encourages us to notice what is around us and then move our attention to something else. The design reflects this accessible approach to managing one's own mental health.</p>
+        <p>In the context of Streatham Cemetery, the theme also evokes the idea of new life growing from a place of remembrance — the seeds of new beginnings.</p>
+      </div>
+    </section>
+
+    <!-- 04 · FORM -->
+    <section class="page">
+      <div class="wrap">
+        <div class="eyebrow"><span class="num">04</span>Form</div>
+        <h2 class="title">A welcoming landmark, not a railing.</h2>
+        <p class="lede">The gate creates a welcoming landmark with a soothing, rhythmic design — contrary to one's expectations of a typical railing formed from verticals. The apple segments are arranged in a beautiful, pleasing geometry, reflecting the calming intentions of the theme.</p>
+        <p>The design aims to be sensitive to its environment, both in theme and appearance. The smooth, flowing rounded shapes are harmonious with the surrounding foliage of the cemetery and park, while the repeating stacked fruit reflects the brick formation of the old retaining wall adjacent to the work.</p>
+
+        <h3 class="subhead">Visual associations</h3>
+        <p>The geometric lattice within each apple segment operates on multiple visual levels to engage the imagination of the passerby. While the outline establishes the clear form of the fruit, the intricate internal linework evokes a broader vocabulary of natural shapes.</p>
+        <p>The delicate symmetry of the cutout voids mirrors the organic patterns found within the immediate cemetery gardens — the veins of a butterfly wing, the structured shell of a beetle. The geometry encourages a fluid association of ideas rather than presenting a literal illustration. These layers of association connect the specific heritage theme to the wider living ecosystem of the surrounding park.</p>
+      </div>
+      <div class="wide">
+        <div class="grid-2">
+          <img src="img/img-007.jpg" alt="Gate form">
+          <img src="img/img-008.jpg" alt="Gate detail">
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 · GALLERY -->
+    <section class="page">
+      <div class="wide">
+        <div class="eyebrow" style="max-width: var(--max); margin-left: auto; margin-right: auto;"><span class="num">05</span>Physical Model</div>
+        <div class="grid-2" style="margin-top: 28px;">
+          <img src="img/img-009.jpg" alt="Gate model detail">
+          <img src="img/img-010.jpg" alt="Gate model alternate angle">
+        </div>
+        <figure style="margin-top: 16px;">
+          <img src="img/img-011.jpg" alt="Gate model on plinth">
+        </figure>
+      </div>
+    </section>
+
+    <!-- 06 · FURTHER DETAILS -->
+    <section class="page">
+      <div class="wrap">
+        <div class="eyebrow"><span class="num">06</span>Further Details</div>
+        <h2 class="title">Materials, finishes and durability.</h2>
+        <p>The gate and railings are to be fabricated from 8mm steel plate which is laser-cut, then zinc-sprayed and powder-coated. The difference in thickness between the frames and the laser-cut panels means the metalwork is very robust and will stand the test of time, yet retains an elegant, fine and lightweight appearance.</p>
+        <p>Artwork is applied with an architectural-grade polyester powder coating to the following specification: Powder Coat External Zinc Metal Spray System for Steel — 25+ Years Durability — C3 Environment; Degrease to SSPC-SP-1; Grit Blast to BS 7079 SA 2.5; Zinc Metal Spray to BS EN ISO 2063; Bondakote Primer.</p>
+        <p>Stakeholders will be invited to choose from a range of shades between green and black. The green reflects the theme — symbolising optimism and new growth — while remaining sensitive to the existing black and muted shades employed across the development.</p>
+      </div>
+      <div class="wide">
+        <figure>
+          <img src="img/img-012.jpg" alt="Colour swatches for powder coat finish">
+          <p class="caption">Example of the colour range for the powder coat in a gloss finish. As with all stages of the commission, the final shade is a collaborative decision.</p>
+        </figure>
+      </div>
+      <div class="wrap">
+        <h3 class="subhead">Permeability</h3>
+        <p>The design allows plenty of visibility through the apple-segment voids, with solid sections at the edges to ensure robustness and stability. As with all my barrier and gate-based artworks, the design adheres to a 100mm maximum aperture at any given point.</p>
+
+        <h3 class="subhead">Locking</h3>
+        <p>The quote includes provision of door furniture — handle, lock and key. A fob access system can be incorporated if desired.</p>
+
+        <h3 class="subhead">Ecology</h3>
+        <p>An opening in the railing allows for hedgehogs to pass, preserving the boundary as a movement corridor for local wildlife.</p>
+
+        <h3 class="subhead">Wayfinding &amp; signage</h3>
+        <p>The text "Springfield Park" is included in the arch above the gate — engraved and infilled across both sides. Access hours will be displayed on a plaque near the gate.</p>
+
+        <h3 class="subhead">Lighting</h3>
+        <p>LED uplighters to be installed in collaboration with the Team to enhance the shadow play shown in the physical model.</p>
+      </div>
+    </section>
+
+    <!-- 07 · DIMENSIONS — THE 3D VIEWER -->
+    <section class="page">
+      <div class="wide">
+        <div class="eyebrow"><span class="num">07</span>Dimensions &amp; steel specification</div>
+        <h2 class="title">The gate, in three dimensions.</h2>
+        <p style="max-width: var(--max);">Below is a rotatable model of the proposed Southern Gateway. Drag to orbit. The annotated dimensions and steel specifications are listed alongside, since they cannot rotate with the model.</p>
+
+        <div class="viewer-block">
+          <div class="viewer-frame">
+            <iframe src="embed.html" title="Springfield Park gate — 3D model" loading="lazy"></iframe>
+          </div>
+          <aside class="specs">
+            <h3>Overall dimensions</h3>
+            <dl>
+              <dt>Overall width</dt><dd>3,458 mm</dd>
+              <dt>Main panel</dt><dd>2,000 × 2,000 mm</dd>
+              <dt>Arch height</dt><dd>855 mm</dd>
+              <dt>Side panel</dt><dd>235 mm</dd>
+              <dt>Hedgehog opening</dt><dd>130 mm</dd>
+            </dl>
+
+            <h3>Steel specification</h3>
+            <dl>
+              <dt>Plate</dt><dd>8 mm laser-cut steel</dd>
+              <dt>Artwork frame</dt><dd>50 × 50 × 5 SHS</dd>
+              <dt>Gate pier</dt><dd>100 × 50 × 6 RHS</dd>
+              <dt>Gate border</dt><dd>50 × 50 × 6 RSA</dd>
+              <dt>Max aperture</dt><dd>100 mm</dd>
+            </dl>
+
+            <p class="note">SHS — square hollow section. RHS — rectangular hollow section. RSA — rolled steel angles (L-shaped).</p>
+          </aside>
+        </div>
+
+        <div class="wrap" style="padding-left: 0; padding-right: 0; margin-top: 32px;">
+          <h3 class="subhead">Scalability</h3>
+          <p>The railing is designed to reach the same level as the original brick retaining wall. The arch and height of the railing can be scaled up without compromising the design, by increasing the number of rows in the stacked apple pattern and extending the arch outwards.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 · PROJECT, DELIVERY & IMPLEMENTATION -->
+    <section class="page">
+      <div class="wide">
+        <div class="eyebrow"><span class="num">08</span>Project, Delivery &amp; Implementation</div>
+        <h2 class="title">Delivery and project management.</h2>
+
+        <div class="twocol">
+          <div>
+            <p>My project management approach is based on good communication and collaboration. This means we can carry out rigorous quality control and achieve the artistic vision set out in the proposal.</p>
+
+            <h3 class="subhead">Communication &amp; stakeholder alignment</h3>
+            <p>I work in a collaborative manner — ensuring that all stakeholders, including the Springfield Village project team, Barratt London and Lambeth Council, are kept up to date with developments. I share weekly updates (or as frequently as required) via email and attend meetings throughout. All aspects of the process are transparent; stakeholders are invited to inspect, comment and feed back on each stage.</p>
+
+            <h3 class="subhead">Fabrication management &amp; QA</h3>
+            <p>I work closely with my fabricator to ensure the work is produced precisely in line with the vision, reporting back to stakeholders. I hold regular workshop inspections during fabrication to review material quality, laser cutting and welds, and the application of the finish. I act as the direct conduit between workshop and client, providing photographic documentation of fabrication milestones before sharing any drawdowns of incurred costs.</p>
+
+            <h3 class="subhead">Milestone &amp; schedule management</h3>
+            <p>I manage the project strictly against the client's timeline, establishing internal deadlines to ensure we remain on track for the January 2027 installation.</p>
+          </div>
+
+          <div>
+            <h3 class="subhead">Project programme</h3>
+            <table>
+              <thead><tr><th>Milestone</th><th class="num">Date</th></tr></thead>
+              <tbody>
+                <tr><td>Design development</td><td class="num">8 Jun – 13 Jul</td></tr>
+                <tr><td>Consultation sessions with Friends of Streatham Cemetery</td><td class="num">—</td></tr>
+                <tr><td>Draft design submitted</td><td class="num">13 Jul</td></tr>
+                <tr><td>Further design development per stakeholder feedback</td><td class="num">—</td></tr>
+                <tr><td>Structural engineering calculations</td><td class="num">—</td></tr>
+                <tr><td>CAD drawings ready for fabrication</td><td class="num">—</td></tr>
+                <tr><td>Artworks signed off</td><td class="num">10 Aug</td></tr>
+                <tr><td>Order materials</td><td class="num">Aug – Dec</td></tr>
+                <tr><td>Fabrication period</td><td class="num">—</td></tr>
+                <tr><td>Community engagement workshops with students</td><td class="num">Sep / Oct</td></tr>
+                <tr><td>Stakeholders invited to visit workshop</td><td class="num">—</td></tr>
+                <tr><td>Finish applied</td><td class="num">Jan 2027</td></tr>
+                <tr><td>Delivery and installation</td><td class="num">Jan 2027</td></tr>
+                <tr><td>Sign off</td><td class="num">Jan 2027</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 · SOCIAL IMPACT -->
+    <section class="page">
+      <div class="wrap">
+        <div class="eyebrow"><span class="num">09</span>Meaningful Social Impact</div>
+        <h2 class="title">Two phases of community engagement.</h2>
+        <p class="lede">I propose a social impact programme split into two distinct phases — enabling connection with different groups. The first focuses on heritage preservation through consultation with the Friends of Streatham Cemetery; the second provides professional development for young creatives within the borough.</p>
+
+        <h3 class="subhead">The design phase — with the Friends of Streatham Cemetery</h3>
+        <p>The Friends of Streatham Cemetery are key to this community engagement: they carry the stories, history and heritage of the place. My plan is to run a series of guided walks and listening sessions along the boundary wall — talking through the motifs, heritage and the small movements of nature I have looked to embody. Their input will help shape some of the symbolism and detailing of the proposed gateway. Ultimately, I want the group to leave knowing the gateway honours the character of the place they have stewarded.</p>
+
+        <h3 class="subhead">The fabrication phase — with local art and design students</h3>
+        <p>This strand is for sixth-form Art and Design students and Art Foundation students. My intention is to leave them with a legacy of skills and experience drawn from the technical and material processes used to design the gate and railing. Each student will design their own gate, starting with a pen drawing on paper and resulting in a physical miniature model laser-cut in brass. In the context of advancements in AI, young people are worried about the job market and it has never been a more important time to develop one's own creativity.</p>
+        <p>During the first session, I will introduce the project by showing how my drawings have resulted in large-scale permanent metalwork artworks and gates. Students will then create black-and-white pen drawings based on high-contrast photographs taken in the local area, with techniques to help them design with structural integrity in mind so that their drawings can be successfully laser-cut. These drawings will be vectorised (digitised) — a process they will learn during the session if computers and the Adobe suite are available, otherwise I will do this myself. The students' drawings will then be laser-cut to create miniature gate models.</p>
+        <p>During the second session, students will each receive their laser-cut brass panel which they will integrate into a larger model framework. They will learn how to cut and manipulate sheets of styrene, and explore other materials such as carbon-fibre dowling, acrylic and flock — which I will provide as part of the workshop.</p>
+        <p>My objective is to ensure these students leave knowing that creative practice is a valued and rigorous skill — that they can take an idea from brief to finished object and hold a real piece of work in their hands, alongside a process they can use again.</p>
+      </div>
+    </section>
+
+    <!-- 10 · EDUCATIONAL PARTNERS -->
+    <section class="page">
+      <div class="wrap">
+        <div class="eyebrow"><span class="num">10</span>Proposed Educational Partners</div>
+        <h2 class="title">Local sixth forms and colleges.</h2>
+        <p>Potential educational establishments I will approach, prioritised by proximity to the site and the relevance of their Art and Design provision:</p>
+
+        <h3 class="subhead">Bishop Thomas Grant School Sixth Form</h3>
+        <p>Belltrees Grove, Streatham, SW16. The closest Streatham sixth form to the cemetery itself, with an established A-Level Art and Design department and direct progression links to UAL and Central Saint Martins.</p>
+
+        <h3 class="subhead">La Retraite Sixth Form</h3>
+        <p>14 Atkins Road, Clapham Park, SW12. The closest Lambeth sixth form with an A-Level Art and Design programme.</p>
+
+        <h3 class="subhead">Lambeth College (South Bank Colleges)</h3>
+        <p>Clapham Common South Side, SW4. The borough's main further-education provider, delivering UAL Level 1, 2 and 3 Diplomas in Art and Design. Brings a different cohort to the project — vocational and Foundation-level students — broadening the social reach of the engagement.</p>
+      </div>
+      <div class="wide">
+        <div class="grid-3">
+          <img src="img/img-014.jpg" alt="Student workshop">
+          <img src="img/img-015.jpg" alt="Student workshop">
+          <img src="img/img-016.jpg" alt="Student workshop">
+        </div>
+        <p class="caption" style="max-width: var(--max); margin-left: auto; margin-right: auto;">Photographs from a similar workshop held at Westminster College for the gate designed for the West End Gate development in Edgware Road.</p>
+      </div>
+    </section>
+
+    <!-- 11 · BUDGET -->
+    <section class="page">
+      <div class="wrap">
+        <div class="eyebrow"><span class="num">11</span>Budget</div>
+        <h2 class="title">Budget.</h2>
+
+        <table>
+          <thead><tr><th>Artist fee</th><th class="num">Amount</th></tr></thead>
+          <tbody>
+            <tr><td>Research, project management, design development &amp; edits, engagement, liaison</td><td class="num">£18,000</td></tr>
+          </tbody>
+        </table>
+
+        <table>
+          <thead><tr><th>Incurred costs</th><th class="num">Fee</th></tr></thead>
+          <tbody>
+            <tr><td>Materials, fabrication, engraving, plaque, delivery and installation<br><span style="color:var(--ink-soft); font-size:0.86rem;">Includes standard gate furniture embedded discretely into the design: handle, latch, lock and fixing point.</span></td><td class="num">£36,335</td></tr>
+            <tr><td>CAD drawings and calculations</td><td class="num">£2,000</td></tr>
+            <tr><td>Engagement materials</td><td class="num">£800</td></tr>
+            <tr><td>Contingency costs (10%)</td><td class="num">£3,915</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td>Total incurred costs</td><td class="num">£43,050</td></tr>
+          </tfoot>
+        </table>
+
+        <table>
+          <tbody>
+            <tr><td><strong>Total</strong></td><td class="num"><strong>£61,050 + VAT</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 12 · RISK & FEASIBILITY -->
+    <section class="page">
+      <div class="wrap">
+        <div class="eyebrow"><span class="num">12</span>Risk &amp; Feasibility</div>
+        <h2 class="title">Risk and feasibility statement.</h2>
+
+        <dl class="risks">
+          <dt>Material / fabrication delays (e.g. steel lead times)</dt>
+          <dd>Pre-ordering materials immediately upon contract signing in August; building a 3-week buffer into the August–December fabrication window.</dd>
+
+          <dt>Site interface mismatch (e.g. the 2.3 m brick wall or new railings vary slightly from drawings)</dt>
+          <dd>Conducting a physical site survey and laser-measure of the Southern Gateway location prior to finalising drawings. Connection posts detailed with a 50 mm tolerance allowance to adapt to minor on-site discrepancies.</dd>
+
+          <dt>On-site installation issues (e.g. weather or access)</dt>
+          <dd>Providing full Risk Assessments and Method Statements (RAMS) to Barratt London in November, well ahead of the January 2027 installation.</dd>
+
+          <dt>Structural integrity and compliance (e.g. wind loading on the solid architrave)</dt>
+          <dd>Collaborating with Fold Engineering to run formal structural calculations. The gate frames and connection posts will be engineered to withstand high wind loads and heavy daily use before submission for sign-off.</dd>
+
+          <dt>Coating and finishes failure (e.g. early corrosion or peeling adjacent to park foliage)</dt>
+          <dd>High-grade shot-blasting, hot zinc spray and architectural powder coating process via Bradleys Metal Finishers. Maximum weather protection; prevents rust bleeding onto the historic brick piers.</dd>
+
+          <dt>On-site installation and logistical conflicts (e.g. restricted access, severe winter weather)</dt>
+          <dd>Submitting a detailed RAMS to the principal contractor in November. Installation within a managed cordon during low-traffic hours, using compact lifting gear to minimise site disruption.</dd>
+
+          <dt>Public safety and aperture trapping (e.g. climbing or finger trapping within the apple lattice)</dt>
+          <dd>Verifying all segment voids during the digital drafting stage to ensure compliance with anti-trap standards. Maximum 100 mm aperture sphere clearance maintained across the entire framework to prevent child injury.</dd>
+        </dl>
+      </div>
+    </section>
+
+    <!-- 13 · CONCLUSION -->
+    <section class="page">
+      <div class="wrap">
+        <div class="eyebrow"><span class="num">13</span>In Closing</div>
+        <h2 class="title">Understanding the brief.</h2>
+        <p class="lede">My design approach aligns with the core objectives of the brief through three distinct stages.</p>
+
+        <h3 class="subhead">Historical and institutional context</h3>
+        <p>The brief emphasises the role of the development in reducing mental-health stigma and celebrating the mission of St George's Mental Health NHS Trust. By researching the Wandsworth archives I uncovered the history of the working farm and orchard that once occupied the site. Using the apple as the central design motif directly honours this history of agricultural rehabilitation. The form connects the heritage of the land to the health goals of the new village.</p>
+
+        <h3 class="subhead">Physical and ecological integration</h3>
+        <p>The proposal respects the technical parameters set out by the Landscape Architect. The total width of 3,458 mm is carefully distributed between the main gateway, the section of railings and the connection posts. The railing heights match the original brick wall; the architrave extends upward to incorporate the engraved "Springfield Park" wayfinding text. The repeating pattern of stacked fruit mimics the rhythm of traditional brickwork rather than standard vertical railings. Security needs are met through built-in locking mechanisms, and the 100 mm maximum aperture aligns with health-and-safety barrier specifications. On an ecological level, the inclusion of a 130 mm ground opening preserves the boundary as a movement corridor for local wildlife.</p>
+
+        <h3 class="subhead">Social impact and community legacy</h3>
+        <p>A permanent gateway should reflect the input of those who live nearby and care for the surrounding spaces. The brief requires meaningful local social impact — integrated into both the design and fabrication phases. Collaborating with the Friends of Streatham Cemetery during design development ensures that the symbolism respects their ongoing stewardship of the area. During fabrication, the workshops with local sixth-form and college art students teach participants each stage of the design process — from sketch to physical prototype.</p>
+
+        <h3 class="subhead">Sustainability statement</h3>
+        <p>The production model for the Southern Gateway prioritises environmental responsibility by focusing on localised supply lines. Keeping the entire manufacturing footprint within London and the East of England reduces transport emissions and supports the local economy.</p>
+
+        <p><em>Carbon reduction &amp; local sourcing.</em> The physical proximity between my studio and Benson Sedgwick Engineering in Dagenham (a 20-minute cycle) allows for low-impact transport during fabrication. Components do not require long-distance freight or international shipping.</p>
+
+        <p><em>Material efficiency &amp; circularity.</em> The geometric apple lattice will be programmed digitally using CAD software before laser cutting — maximising sheet-metal efficiency and minimising raw-steel scrap. Steel offcuts are collected and processed through local metal recycling streams. The hot-zinc-spray-plus-architectural-powder-coating specification ensures a life expectancy of several decades, reducing the need for premature replacement, chemical maintenance treatments or future structural interventions.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div>Rona Smith · Springfield Village Southern Gateway</div>
+    <div>Private review</div>
+  </footer>
+
+  <script>
+    // Password gate — SHA-256(input) compared to stored hash.
+    // To change the password: replace STORED_HASH with the hex SHA-256 of your new password.
+    // Default password: springfield
+    const STORED_HASH = '7ba84b57db28dcd3757ae13ee1c5ad77a194ae45575e72491bdcd8118babe0f4';
+    const STORAGE_KEY = 'rona-proposal-unlocked';
+
+    async function sha256(text) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function unlock() {
+      document.getElementById('gate').classList.add('unlocked');
+      sessionStorage.setItem(STORAGE_KEY, '1');
+      try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+    }
+
+    if (sessionStorage.getItem(STORAGE_KEY) === '1' || localStorage.getItem(STORAGE_KEY) === '1') {
+      unlock();
+    } else {
+      // Focus the input
+      const input = document.getElementById('gate-input');
+      setTimeout(() => input.focus(), 50);
+    }
+
+    async function tryUnlock() {
+      const input = document.getElementById('gate-input');
+      const value = input.value.trim();
+      if (!value) return;
+      const hash = await sha256(value);
+      if (hash === STORED_HASH) {
+        unlock();
+      } else {
+        input.classList.add('error');
+        input.value = '';
+        setTimeout(() => input.classList.remove('error'), 400);
+      }
+    }
+
+    document.getElementById('gate-submit').addEventListener('click', tryUnlock);
+    document.getElementById('gate-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') tryUnlock();
+    });
+
+    // Header scroll effect
+    const bar = document.querySelector('header.bar');
+    window.addEventListener('scroll', () => {
+      bar.classList.toggle('scrolled', window.scrollY > 12);
+    }, { passive: true });
+  </script>
+</body>
+</html>
