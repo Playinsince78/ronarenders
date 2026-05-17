@@ -2,31 +2,652 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rona's Artwork Experiment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Rona's Artwork — 3D Viewer</title>
   <style>
-    body {
+    :root {
+      --panel-bg: rgba(255, 255, 255, 0.72);
+      --panel-border: rgba(0, 0, 0, 0.08);
+      --ink: #1d1d1f;
+      --ink-soft: #6b6b70;
+      --accent: #1d1d1f;
+    }
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #ffffff;
+      color: var(--ink);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    body.dragover::after {
+      content: "";
+      position: fixed;
+      inset: 12px;
+      border: 2px dashed var(--ink);
+      border-radius: 16px;
+      pointer-events: none;
+      z-index: 50;
+    }
+    #c {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    /* Empty state */
+    #overlay-empty {
+      position: fixed;
+      inset: 0;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      background: #fafafa;
-      color: #222;
+      gap: 12px;
+      pointer-events: none;
       padding: 24px;
-      box-sizing: border-box;
-    }
-    h1 {
-      font-size: clamp(1.4rem, 5vw, 2.4rem);
-      font-weight: 500;
-      letter-spacing: -0.01em;
       text-align: center;
-      margin: 0;
+    }
+    #overlay-empty.hidden { display: none; }
+    #overlay-empty .card {
+      pointer-events: auto;
+      background: var(--panel-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--panel-border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      max-width: 360px;
+      box-shadow: 0 6px 30px rgba(0, 0, 0, 0.06);
+    }
+    #overlay-empty h2 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    #overlay-empty p {
+      margin: 0 0 14px;
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      line-height: 1.4;
+    }
+    #overlay-empty .row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Controls panel */
+    #controls {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      width: 280px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--panel-border);
+      border-radius: 14px;
+      box-shadow: 0 6px 30px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+      z-index: 20;
+    }
+    #controls summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 12px 16px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #controls summary::-webkit-details-marker { display: none; }
+    #controls summary .chev { transition: transform 0.2s; opacity: 0.5; }
+    #controls[open] summary .chev { transform: rotate(180deg); }
+    #controls .body { padding: 4px 16px 16px; }
+    #controls h3 {
+      margin: 14px 0 6px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    #controls h3:first-child { margin-top: 0; }
+    #controls .field {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 6px 0;
+      font-size: 0.85rem;
+    }
+    #controls .field label { color: var(--ink); }
+    #controls .field .val { color: var(--ink-soft); font-variant-numeric: tabular-nums; min-width: 2.4em; text-align: right; }
+    #controls input[type="range"] { flex: 1; accent-color: var(--accent); }
+    #controls input[type="color"] {
+      width: 32px; height: 24px; border: none; padding: 0; background: none; cursor: pointer;
+    }
+    #controls input[type="checkbox"] { accent-color: var(--accent); }
+    #controls .btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    button, .btn {
+      font: inherit;
+      font-size: 0.82rem;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--panel-border);
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+      transition: background 0.15s, transform 0.05s;
+    }
+    button:hover, .btn:hover { background: #f4f4f5; }
+    button:active, .btn:active { transform: translateY(1px); }
+    button.primary, .btn.primary {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+    button.primary:hover, .btn.primary:hover { background: #000; }
+
+    /* Footer credit */
+    #credit {
+      position: fixed;
+      left: 16px;
+      bottom: 14px;
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      left: 50%;
+      bottom: 30px;
+      transform: translate(-50%, 20px);
+      background: rgba(20, 20, 20, 0.9);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 60;
+      max-width: 80vw;
+      text-align: center;
+    }
+    #toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    /* Mobile: bottom sheet */
+    @media (max-width: 640px) {
+      #controls {
+        top: auto;
+        right: 12px;
+        left: 12px;
+        bottom: 12px;
+        width: auto;
+        max-height: 55vh;
+        overflow-y: auto;
+      }
+      #credit { bottom: auto; top: 14px; right: 16px; left: auto; }
     }
   </style>
 </head>
 <body>
-  <h1>Rendering Rona's artwork experiment</h1>
+  <canvas id="c"></canvas>
+
+  <div id="overlay-empty">
+    <div class="card">
+      <h2>Rona's artwork, in 3D</h2>
+      <p>Drop an SVG anywhere on the page, or tap upload. Works best with closed, filled paths from Illustrator (strokes-only won't extrude).</p>
+      <div class="row">
+        <button class="primary" id="btn-upload-empty">Upload SVG</button>
+        <button id="btn-sample-empty-a">Try sample A</button>
+        <button id="btn-sample-empty-b">Try sample B</button>
+      </div>
+    </div>
+  </div>
+
+  <details id="controls" open>
+    <summary>Controls <span class="chev">▾</span></summary>
+    <div class="body">
+      <h3>Shape</h3>
+      <div class="field">
+        <label for="depth">Depth</label>
+        <input type="range" id="depth" min="0.1" max="20" step="0.1" value="2">
+        <span class="val" id="depth-val">2.0</span>
+      </div>
+      <div class="field">
+        <label for="bevel">Bevel</label>
+        <input type="range" id="bevel" min="0" max="1" step="0.02" value="0.1">
+        <span class="val" id="bevel-val">0.10</span>
+      </div>
+
+      <h3>Scene</h3>
+      <div class="field">
+        <label for="spin">Auto-spin</label>
+        <input type="checkbox" id="spin">
+      </div>
+      <div class="field">
+        <label for="light">Light</label>
+        <input type="range" id="light" min="0" max="2" step="0.05" value="0.8">
+        <span class="val" id="light-val">0.80</span>
+      </div>
+      <div class="field">
+        <label for="bg">Background</label>
+        <input type="color" id="bg" value="#ffffff">
+      </div>
+
+      <h3>Load</h3>
+      <div class="btns">
+        <button id="btn-upload" class="primary">Upload SVG</button>
+        <button id="btn-sample-a">Sample A</button>
+        <button id="btn-sample-b">Sample B</button>
+        <button id="btn-reset">Reset view</button>
+      </div>
+
+      <h3>Export</h3>
+      <div class="btns">
+        <button id="btn-export-glb">Download .glb</button>
+        <button id="btn-export-png">Save PNG</button>
+      </div>
+    </div>
+  </details>
+
+  <div id="credit">Rona's artwork, extruded.</div>
+  <div id="toast"></div>
+
+  <input type="file" id="file" accept=".svg,image/svg+xml" hidden>
+
+  <!-- Sample A: a ring (circle with a hole) + a small dot in a second color -->
+  <script type="image/svg+xml" id="sampleA">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+      <path fill="#1d1d1f" fill-rule="evenodd"
+            d="M30 100 a70 70 0 1 0 140 0 a70 70 0 1 0 -140 0 Z
+               M70 100 a30 30 0 1 1 60 0 a30 30 0 1 1 -60 0 Z"/>
+      <circle cx="168" cy="36" r="16" fill="#e74c3c"/>
+    </svg>
+  </script>
+
+  <!-- Sample B: three stacked colored bars -->
+  <script type="image/svg+xml" id="sampleB">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+      <rect x="20" y="30"  width="160" height="36" fill="#e74c3c"/>
+      <rect x="20" y="82"  width="160" height="36" fill="#3498db"/>
+      <rect x="20" y="134" width="160" height="36" fill="#f1c40f"/>
+    </svg>
+  </script>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
+    import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+
+    const canvas = document.getElementById('c');
+    const overlayEmpty = document.getElementById('overlay-empty');
+    const toastEl = document.getElementById('toast');
+
+    const state = {
+      paths: null,
+      group: null,
+      depth: 2,
+      bevel: 0.1,
+      spin: false,
+    };
+
+    let renderer, scene, camera, controls, dirLight, ambLight;
+    let pendingRebuild = false;
+
+    function toast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => toastEl.classList.remove('show'), 2200);
+    }
+
+    function initScene() {
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color('#ffffff');
+
+      camera = new THREE.PerspectiveCamera(45, 2, 0.1, 2000);
+      camera.position.set(0, 10, 30);
+
+      controls = new OrbitControls(camera, canvas);
+      controls.target.set(0, 0, 0);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.update();
+
+      ambLight = new THREE.AmbientLight(0xffffff, 0.35);
+      scene.add(ambLight);
+
+      dirLight = new THREE.DirectionalLight(0xefefff, 0.8);
+      dirLight.position.set(10, 10, 10);
+      scene.add(dirLight);
+
+      const back = new THREE.DirectionalLight(0xffffff, 0.25);
+      back.position.set(-8, 5, -10);
+      scene.add(back);
+    }
+
+    function resizeRendererToDisplaySize() {
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      const need = canvas.width !== Math.floor(w * window.devicePixelRatio) ||
+                   canvas.height !== Math.floor(h * window.devicePixelRatio);
+      if (need) renderer.setSize(w, h, false);
+      return need;
+    }
+
+    function frameArea(object) {
+      const box = new THREE.Box3().setFromObject(object);
+      if (box.isEmpty()) return;
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const fov = camera.fov * Math.PI / 180;
+      const dist = (maxDim / (2 * Math.tan(fov / 2))) * 1.6;
+
+      const dir = new THREE.Vector3(0.6, 0.45, 1).normalize();
+      camera.position.copy(center).add(dir.multiplyScalar(dist));
+      camera.near = Math.max(dist / 100, 0.01);
+      camera.far = dist * 100;
+      camera.updateProjectionMatrix();
+
+      controls.target.copy(center);
+      controls.update();
+    }
+
+    function parseSvgText(text) {
+      const data = new SVGLoader().parse(text);
+      return data.paths;
+    }
+
+    function disposeGroup(group) {
+      if (!group) return;
+      group.traverse(obj => {
+        if (obj.geometry) obj.geometry.dispose();
+        if (obj.material) {
+          const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+          mats.forEach(m => m.dispose());
+        }
+      });
+      scene.remove(group);
+    }
+
+    function buildMeshFromPaths(paths, depth, bevel) {
+      // First pass: collect shapes + 2D bounds so depth/bevel can be interpreted
+      // in world units no matter what viewBox the SVG used.
+      const entries = [];
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+
+      for (const path of paths) {
+        const fill = path.userData && path.userData.style && path.userData.style.fill;
+        if (!fill || fill === 'none') continue;
+        const fillOpacity = (path.userData && path.userData.style && path.userData.style.fillOpacity != null)
+          ? path.userData.style.fillOpacity : 1;
+        const shapes = SVGLoader.createShapes(path);
+        if (!shapes.length) continue;
+
+        for (const shape of shapes) {
+          const pts = shape.extractPoints(12).shape;
+          for (const p of pts) {
+            if (p.x < minX) minX = p.x;
+            if (p.x > maxX) maxX = p.x;
+            if (p.y < minY) minY = p.y;
+            if (p.y > maxY) maxY = p.y;
+          }
+        }
+        entries.push({ shapes, fill, fillOpacity });
+      }
+
+      const group = new THREE.Group();
+      const svgWidth = Math.max(1e-6, maxX - minX);
+      const svgHeight = Math.max(1e-6, maxY - minY);
+      const maxXY = Math.max(svgWidth, svgHeight);
+      const targetSize = 10;
+      const scaleFactor = targetSize / maxXY;
+
+      // Slider values are world-unit; convert to SVG-unit for ExtrudeGeometry
+      const svgDepth = depth / scaleFactor;
+      const svgBevel = bevel / scaleFactor;
+
+      const extrudeOpts = {
+        depth: svgDepth,
+        bevelEnabled: svgBevel > 0,
+        bevelThickness: svgBevel,
+        bevelSize: svgBevel,
+        bevelSegments: 2,
+        curveSegments: 24,
+      };
+
+      for (const { shapes, fill, fillOpacity } of entries) {
+        const geom = new THREE.ExtrudeGeometry(shapes, extrudeOpts);
+        const mat = new THREE.MeshStandardMaterial({
+          color: new THREE.Color().setStyle(fill),
+          transparent: fillOpacity < 1,
+          opacity: fillOpacity,
+          roughness: 0.55,
+          metalness: 0.05,
+          side: THREE.DoubleSide,
+        });
+        group.add(new THREE.Mesh(geom, mat));
+      }
+
+      // Flip Y so SVG-down becomes three.js-up, then uniform scale to ~10 units
+      group.scale.set(scaleFactor, -scaleFactor, scaleFactor);
+
+      // Center after scaling
+      const box = new THREE.Box3().setFromObject(group);
+      const center = box.getCenter(new THREE.Vector3());
+      group.position.sub(center);
+
+      return group;
+    }
+
+    function rebuildExtrusion() {
+      if (!state.paths) return;
+      disposeGroup(state.group);
+      state.group = buildMeshFromPaths(state.paths, state.depth, state.bevel);
+      scene.add(state.group);
+    }
+
+    function loadSvg(text) {
+      try {
+        const paths = parseSvgText(text);
+        if (!paths || paths.length === 0) {
+          toast('No paths found in SVG');
+          return;
+        }
+        state.paths = paths;
+        disposeGroup(state.group);
+        state.group = buildMeshFromPaths(state.paths, state.depth, state.bevel);
+        scene.add(state.group);
+        overlayEmpty.classList.add('hidden');
+        frameArea(state.group);
+      } catch (e) {
+        console.error(e);
+        toast('Could not parse that SVG');
+      }
+    }
+
+    function loadSample(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      loadSvg(el.textContent);
+    }
+
+    function readFile(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => loadSvg(e.target.result);
+      reader.onerror = () => toast('Could not read file');
+      reader.readAsText(file);
+    }
+
+    function downloadBlob(blob, name) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function exportGLB() {
+      if (!state.group) { toast('Load an SVG first'); return; }
+      new GLTFExporter().parse(
+        state.group,
+        result => {
+          const blob = result instanceof ArrayBuffer
+            ? new Blob([result], { type: 'model/gltf-binary' })
+            : new Blob([JSON.stringify(result)], { type: 'application/json' });
+          downloadBlob(blob, 'rona-artwork.glb');
+          toast('Exported .glb');
+        },
+        err => { console.error(err); toast('Export failed'); },
+        { binary: true }
+      );
+    }
+
+    function exportPNG() {
+      if (!state.group) { toast('Load an SVG first'); return; }
+      renderer.render(scene, camera);
+      const dataUrl = renderer.domElement.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = 'rona-artwork.png';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      toast('Saved PNG');
+    }
+
+    function scheduleRebuild() {
+      if (pendingRebuild) return;
+      pendingRebuild = true;
+      requestAnimationFrame(() => {
+        pendingRebuild = false;
+        rebuildExtrusion();
+      });
+    }
+
+    function setupUI() {
+      const depth = document.getElementById('depth');
+      const depthVal = document.getElementById('depth-val');
+      const bevel = document.getElementById('bevel');
+      const bevelVal = document.getElementById('bevel-val');
+      const spin = document.getElementById('spin');
+      const light = document.getElementById('light');
+      const lightVal = document.getElementById('light-val');
+      const bg = document.getElementById('bg');
+      const fileInput = document.getElementById('file');
+
+      depth.addEventListener('input', () => {
+        state.depth = parseFloat(depth.value);
+        depthVal.textContent = state.depth.toFixed(1);
+        scheduleRebuild();
+      });
+      bevel.addEventListener('input', () => {
+        state.bevel = parseFloat(bevel.value);
+        bevelVal.textContent = state.bevel.toFixed(2);
+        scheduleRebuild();
+      });
+      spin.addEventListener('change', () => { state.spin = spin.checked; });
+      light.addEventListener('input', () => {
+        const v = parseFloat(light.value);
+        dirLight.intensity = v;
+        lightVal.textContent = v.toFixed(2);
+      });
+      bg.addEventListener('input', () => {
+        scene.background = new THREE.Color(bg.value);
+        document.body.style.background = bg.value;
+      });
+
+      const openPicker = () => fileInput.click();
+      document.getElementById('btn-upload').addEventListener('click', openPicker);
+      document.getElementById('btn-upload-empty').addEventListener('click', openPicker);
+      document.getElementById('btn-sample-a').addEventListener('click', () => loadSample('sampleA'));
+      document.getElementById('btn-sample-b').addEventListener('click', () => loadSample('sampleB'));
+      document.getElementById('btn-sample-empty-a').addEventListener('click', () => loadSample('sampleA'));
+      document.getElementById('btn-sample-empty-b').addEventListener('click', () => loadSample('sampleB'));
+      document.getElementById('btn-reset').addEventListener('click', () => { if (state.group) frameArea(state.group); });
+      document.getElementById('btn-export-glb').addEventListener('click', exportGLB);
+      document.getElementById('btn-export-png').addEventListener('click', exportPNG);
+
+      fileInput.addEventListener('change', e => {
+        const f = e.target.files && e.target.files[0];
+        if (f) readFile(f);
+        fileInput.value = '';
+      });
+    }
+
+    function setupDropAndFile() {
+      const body = document.body;
+      ['dragenter', 'dragover'].forEach(ev => {
+        body.addEventListener(ev, e => {
+          e.preventDefault();
+          body.classList.add('dragover');
+        });
+      });
+      ['dragleave', 'drop'].forEach(ev => {
+        body.addEventListener(ev, e => {
+          e.preventDefault();
+          if (ev === 'dragleave' && e.target !== body) return;
+          body.classList.remove('dragover');
+        });
+      });
+      body.addEventListener('drop', e => {
+        const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        if (f) readFile(f);
+      });
+    }
+
+    function animate() {
+      if (resizeRendererToDisplaySize()) {
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
+      }
+      controls.update();
+      if (state.spin && state.group) {
+        state.group.rotation.y += 0.006;
+      }
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    initScene();
+    setupUI();
+    setupDropAndFile();
+    animate();
+  </script>
 </body>
 </html>
