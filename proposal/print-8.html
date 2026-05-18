@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Springfield Village Southern Gateway — Rona Smith (8-slide)</title>
+  <style>
+    @font-face { font-family: "Cormorant Garamond"; font-weight: 300; src: url("fonts/CormorantGaramond-300.woff2") format("woff2"); font-display: block; }
+    @font-face { font-family: "Cormorant Garamond"; font-weight: 400; src: url("fonts/CormorantGaramond-400.woff2") format("woff2"); font-display: block; }
+    @font-face { font-family: "Inter"; font-weight: 400; src: url("fonts/Inter-400.woff2") format("woff2"); font-display: block; }
+    @font-face { font-family: "Inter"; font-weight: 500; src: url("fonts/Inter-500.woff2") format("woff2"); font-display: block; }
+    @font-face { font-family: "Inter"; font-weight: 600; src: url("fonts/Inter-600.woff2") format("woff2"); font-display: block; }
+
+    @page { size: A4 landscape; margin: 0; }
+    :root {
+      --bg: #FAFAF7;
+      --ink: #1a1a1a;
+      --ink-soft: #6b6b6b;
+      --hair: rgba(0,0,0,0.12);
+      --serif: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: var(--bg); color: var(--ink);
+      font-family: var(--sans);
+      font-size: 11pt; line-height: 1.55;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .slide {
+      width: 297mm; height: 210mm;
+      padding: 16mm 22mm;
+      page-break-after: always;
+      background: var(--bg);
+      position: relative; overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+    .slide:last-child { page-break-after: auto; }
+    .slide-hdr, .slide-ftr {
+      display: flex; align-items: baseline; justify-content: space-between;
+      font-size: 8.5pt; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--ink-soft);
+    }
+    .slide-hdr .num { color: var(--ink); margin-right: 14px; font-weight: 500; }
+    .slide-ftr { padding-top: 8mm; border-top: 1px solid var(--hair); }
+    .wordmark {
+      font-family: var(--serif); font-weight: 300;
+      font-size: 11pt; letter-spacing: 0.42em;
+      color: var(--ink); text-transform: uppercase;
+    }
+    .slide-body { padding: 12mm 0; min-height: 0; }
+    h1.title, h2.title {
+      font-family: var(--serif); font-weight: 300;
+      letter-spacing: -0.005em; line-height: 1.08;
+      margin: 0 0 6mm;
+    }
+    h2.title { font-size: 28pt; }
+    h1.title { font-size: 42pt; }
+    .lede {
+      font-family: var(--serif); font-weight: 300;
+      font-size: 16pt; line-height: 1.35;
+      margin: 0 0 6mm; color: var(--ink);
+    }
+    p { margin: 0 0 3.2mm; }
+    p:last-child { margin-bottom: 0; }
+    .subhead {
+      font-family: var(--sans); font-weight: 600;
+      font-size: 9.5pt; letter-spacing: 0.02em;
+      margin: 5mm 0 1mm; color: var(--ink);
+    }
+    .caption {
+      font-size: 8pt; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--ink-soft);
+      margin-top: 2mm;
+    }
+    .cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14mm; }
+    .cols-12 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 14mm; }
+    .cols-21 { display: grid; grid-template-columns: 1fr 1.4fr; gap: 14mm; }
+
+    figure { margin: 0; }
+    figure img { display: block; width: 100%; height: auto; }
+    .img-fit { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .fill { height: 100%; display: flex; align-items: stretch; }
+
+    .slide.cover-slide {
+      padding: 0;
+      grid-template-rows: 1fr;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 0;
+    }
+    .slide.cover-slide .cover-image { position: relative; overflow: hidden; }
+    .slide.cover-slide .cover-image img { width: 100%; height: 100%; object-fit: cover; }
+    .slide.cover-slide .cover-text {
+      padding: 22mm 22mm;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .slide.cover-slide h1 {
+      font-family: var(--serif); font-weight: 300;
+      font-size: 38pt; line-height: 1.05; letter-spacing: -0.01em;
+      margin: 0 0 8mm;
+    }
+    .slide.cover-slide .label {
+      font-size: 8.5pt; letter-spacing: 0.26em;
+      text-transform: uppercase; color: var(--ink-soft);
+      margin-bottom: 8mm;
+    }
+    .slide.cover-slide .byline {
+      font-family: var(--serif); font-size: 14pt; color: var(--ink-soft);
+      margin-bottom: 16mm;
+    }
+    .slide.cover-slide .footnote {
+      font-size: 9pt; color: var(--ink-soft); line-height: 1.5;
+      max-width: 78mm;
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
+    th, td {
+      padding: 2.8mm 4mm; text-align: left;
+      border-bottom: 0.4pt solid var(--hair);
+      vertical-align: top;
+    }
+    th {
+      font-weight: 500; font-size: 8pt; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--ink-soft);
+    }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    tfoot td { font-weight: 600; border-top: 0.4pt solid var(--ink); border-bottom: 0; padding-top: 3mm; }
+
+    .specs h3 {
+      font-family: var(--sans); font-size: 8pt;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--ink-soft); margin: 0 0 2mm;
+      font-weight: 500;
+    }
+    .specs dl {
+      margin: 0 0 5mm;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: 6mm; row-gap: 1.4mm;
+      font-size: 9pt;
+    }
+    .specs dt { color: var(--ink-soft); }
+    .specs dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+
+    .risks dt { font-weight: 500; margin-top: 3mm; font-size: 9.5pt; }
+    .risks dt::before { content: "Risk —  "; color: var(--ink-soft); font-weight: 400; }
+    .risks dd { margin: 0.8mm 0 0; color: var(--ink-soft); font-size: 9pt; }
+    .risks dd::before { content: "Mitigation —  "; color: var(--ink); font-weight: 500; }
+
+    .img-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+    .soft { color: var(--ink-soft); }
+    em { font-style: italic; }
+    .label-row {
+      font-size: 8pt; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--ink-soft);
+      margin-bottom: 3mm;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ───────────── 01 · COVER ───────────── -->
+  <section class="slide cover-slide">
+    <div class="cover-image">
+      <img src="img/img-000.jpg" alt="">
+    </div>
+    <div class="cover-text">
+      <div>
+        <div class="label">Proposal · Public Art Commission</div>
+      </div>
+      <div>
+        <h1>Springfield Village<br>Southern Gateway</h1>
+        <div class="byline">Rona Smith</div>
+        <p class="footnote">A physical model of the proposed gateway is at the AND office. The model can be handled — the gate opens by hand, and the proposal can be viewed from different angles.</p>
+      </div>
+      <div class="slide-ftr" style="border: 0; padding: 0;">
+        <div class="wordmark">Rona</div>
+        <div>01 / 08</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── 02 · CONCEPT (history + theme combined) ───────────── -->
+  <section class="slide">
+    <div class="slide-hdr">
+      <div><span class="num">02</span>Concept</div>
+      <div>Springfield Village Southern Gateway</div>
+    </div>
+    <div class="slide-body cols-12">
+      <div>
+        <h2 class="title">From an orchard, an apple. From an apple, a gate.</h2>
+        <p class="lede">A design rooted in the lesser-known history of the Springfield site, made meaningful and locally relevant.</p>
+
+        <div class="subhead">The site</div>
+        <p>Between 1841 and 1948 the Springfield hospital ran the only working farm in London. The Wandsworth archives hold cuttings, books and photographs that describe a hospital where patients were encouraged to engage in farmwork as part of a rehabilitation scheme. Within that farm — an orchard.</p>
+
+        <div class="subhead">The apple, and its segments</div>
+        <p>I use the form of an apple and its segments as the starting point. A series of stacked apples with a geometric lattice across each — inspired by my drawings of cut apple segments and their seed casings.</p>
+        <p>The apple symbolises health and wellbeing — reflecting the development's ambition to break down barriers around mental health. The acronym <em>APPLE</em> (Acknowledge, Pause, Pull back, Let go, Explore) is a mindfulness technique now widely used to navigate intrusive thoughts. In the context of Streatham Cemetery, the theme also evokes new life growing from a place of remembrance — the seeds of new beginnings.</p>
+      </div>
+      <div style="display: grid; grid-template-rows: 1fr 1fr; gap: 4mm;">
+        <figure class="fill"><img src="img/img-003.jpg" class="img-fit" alt=""></figure>
+        <figure><img src="img/img-apple.jpg" alt=""></figure>
+      </div>
+    </div>
+    <div class="slide-ftr">
+      <div class="wordmark">Rona</div>
+      <div>02 / 08</div>
+    </div>
+  </section>
+
+  <!-- ───────────── 03 · FORM ───────────── -->
+  <section class="slide">
+    <div class="slide-hdr">
+      <div><span class="num">03</span>Form</div>
+      <div>Springfield Village Southern Gateway</div>
+    </div>
+    <div class="slide-body cols-21">
+      <figure class="fill"><img src="img/img-008.jpg" class="img-fit" alt=""></figure>
+      <div>
+        <h2 class="title">A welcoming landmark, not a railing.</h2>
+        <p class="lede">The gate replaces a typical vertical railing with a soothing, rhythmic geometry — apple segments stacked in a calming pattern.</p>
+        <p>The smooth, rounded shapes are harmonious with the foliage of the cemetery and park, while the repeating stacked fruit echoes the brick formation of the old retaining wall adjacent to the work.</p>
+        <p>Within each segment, an intricate internal lattice evokes a broader vocabulary of natural shapes — the veins of a butterfly wing, the structured shell of a beetle. The geometry encourages a fluid association of ideas rather than presenting a literal illustration.</p>
+        <div class="img-grid-2" style="margin-top: 6mm;">
+          <figure><img src="img/img-009.jpg" alt=""></figure>
+          <figure><img src="img/img-010.jpg" alt=""></figure>
+        </div>
+      </div>
+    </div>
+    <div class="slide-ftr">
+      <div class="wordmark">Rona</div>
+      <div>03 / 08</div>
+    </div>
+  </section>
+
+  <!-- ───────────── 04 · DIMENSIONS & SPEC ───────────── -->
+  <section class="slide">
+    <div class="slide-hdr">
+      <div><span class="num">04</span>Dimensions &amp; Steel Specification</div>
+      <div>Springfield Village Southern Gateway</div>
+    </div>
+    <div class="slide-body cols-12">
+      <figure class="fill"><img src="img/img-011.jpg" class="img-fit" alt=""></figure>
+      <div class="specs">
+        <h2 class="title" style="font-size: 22pt;">The Southern Gateway, to scale.</h2>
+        <p class="soft" style="font-size: 9.5pt; margin-bottom: 5mm;">An interactive 3D model is available on the web version of this proposal.</p>
+
+        <h3>Overall dimensions</h3>
+        <dl>
+          <dt>Overall width</dt><dd>3,458 mm</dd>
+          <dt>Main panel</dt><dd>2,000 × 2,000 mm</dd>
+          <dt>Arch height</dt><dd>855 mm</dd>
+          <dt>Side panel</dt><dd>235 mm</dd>
+          <dt>Hedgehog opening</dt><dd>130 mm</dd>
+        </dl>
+
+        <h3>Steel specification</h3>
+        <dl>
+          <dt>Plate</dt><dd>8 mm laser-cut steel</dd>
+          <dt>Artwork frame</dt><dd>50 × 50 × 5 SHS</dd>
+          <dt>Gate pier</dt><dd>100 × 50 × 6 RHS</dd>
+          <dt>Gate border</dt><dd>50 × 50 × 6 RSA</dd>
+          <dt>Max aperture</dt><dd>100 mm</dd>
+        </dl>
+
+        <p class="soft" style="font-size: 8.5pt; margin-top: 3mm;">SHS — square hollow section. RHS — rectangular hollow section. RSA — rolled steel angles (L-shaped).</p>
+
+        <div class="subhead" style="margin-top: 6mm;">Scalability</div>
+        <p>The railing matches the original brick retaining wall. The arch and height can be scaled up without compromising the design — by adding rows to the stacked apple pattern and extending the arch outward.</p>
+      </div>
+    </div>
+    <div class="slide-ftr">
+      <div class="wordmark">Rona</div>
+      <div>04 / 08</div>
+    </div>
+  </section>
+
+  <!-- ───────────── 05 · MATERIALS & FINISHES ───────────── -->
+  <section class="slide">
+    <div class="slide-hdr">
+      <div><span class="num">05</span>Materials &amp; Finishes</div>
+      <div>Springfield Village Southern Gateway</div>
+    </div>
+    <div class="slide-body cols-2">
+      <div>
+        <h2 class="title">Built to last, finished to integrate.</h2>
+        <p class="lede">8 mm laser-cut steel, zinc-sprayed and architecturally powder-coated for 25+ years' durability in a C3 environment.</p>
+
+        <div class="subhead">Coating specification</div>
+        <p class="soft" style="font-size: 9pt;">Degrease to SSPC-SP-1 → Grit Blast to BS 7079 SA 2.5 → Zinc Metal Spray to BS EN ISO 2063 → Bondakote Primer → Polyester architectural powder coat.</p>
+
+        <div class="subhead">Permeability &amp; safety</div>
+        <p>100 mm maximum aperture maintained throughout the design — compliant with anti-trap standards. Solid sections at the edges ensure robustness and stability.</p>
+
+        <div class="subhead">Locking, ecology &amp; wayfinding</div>
+        <p>Handle, lock and key included; fob access available on request. A 130 mm ground opening preserves the boundary as a wildlife corridor. "Springfield Park" is engraved and infilled into the arch above the gate on both sides. LED uplighters enhance the shadow play shown in the physical model.</p>
+      </div>
+      <div>
+        <figure class="fill"><img src="img/img-012.jpg" class="img-fit" alt=""></figure>
+        <p class="caption" style="margin-top: 4mm;">Example colour range for the powder coat in a gloss finish. The final shade is a collaborative decision with stakeholders.</p>
+      </div>
+    </div>
+    <div class="slide-ftr">
+      <div class="wordmark">Rona</div>
+      <div>05 / 08</div>
+    </div>
+  </section>
+
+  <!-- ───────────── 06 · DELIVERY, TEAM & PROGRAMME ───────────── -->
+  <section class="slide">
+    <div class="slide-hdr">
+      <div><span class="num">06</span>Delivery, Team &amp; Programme</div>
+      <div>Springfield Village Southern Gateway</div>
+    </div>
+    <div class="slide-body cols-2">
+      <div>
+        <h2 class="title">Delivery, by a trusted team.</h2>
+        <p>My project management approach is based on good communication and collaboration — rigorous quality control while achieving the artistic vision. I share weekly updates with the project team, hold regular workshop inspections during fabrication, and provide photographic documentation of milestones before any drawdowns of incurred costs.</p>
+
+        <div class="subhead">Team</div>
+        <p><strong>Benson Sedgwick Engineering</strong> · Dagenham<br><span class="soft">Fabrication. A regular collaborator on my previous gates.</span></p>
+        <p><strong>Bradleys Metal Finishers</strong> · Ipswich<br><span class="soft">Powder coating. Painted and powder-coated several of my previous commissions.</span></p>
+        <p><strong>Fold Engineering</strong> · Bath<br><span class="soft">Structural engineering. Has carried out calculations for many previous projects.</span></p>
+      </div>
+      <div>
+        <div class="label-row">Project programme</div>
+        <table>
+          <thead><tr><th>Milestone</th><th class="num">Date</th></tr></thead>
+          <tbody>
+            <tr><td>Design development &amp; stakeholder consultation</td><td class="num">8 Jun – 13 Jul</td></tr>
+            <tr><td>Draft design submitted</td><td class="num">13 Jul</td></tr>
+            <tr><td>Artworks signed off</td><td class="num">10 Aug</td></tr>
+            <tr><td>Order materials &amp; fabrication</td><td class="num">Aug – Dec</td></tr>
+            <tr><td>Community workshops with students</td><td class="num">Sep / Oct</td></tr>
+            <tr><td>Finish applied</td><td class="num">Jan 2027</td></tr>
+            <tr><td>Delivery &amp; installation</td><td class="num">Jan 2027</td></tr>
+            <tr><td>Sign off</td><td class="num">Jan 2027</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="slide-ftr">
+      <div class="wordmark">Rona</div>
+      <div>06 / 08</div>
+    </div>
+  </section>
+
+  <!-- ───────────── 07 · COMMUNITY ENGAGEMENT ───────────── -->
+  <section class="slide">
+    <div class="slide-hdr">
+      <div><span class="num">07</span>Community Engagement</div>
+      <div>Springfield Village Southern Gateway</div>
+    </div>
+    <div class="slide-body cols-12">
+      <div>
+        <h2 class="title">Two phases of engagement.</h2>
+        <p class="lede">Heritage preservation through consultation, and professional development for young creatives within the borough.</p>
+
+        <div class="subhead">Design phase — Friends of Streatham Cemetery</div>
+        <p>Guided walks and listening sessions along the boundary wall. The Friends carry the stories, history and heritage of the place; their input will shape the symbolism and detailing. The aim: leave the group knowing the gateway honours the character of the place they have stewarded.</p>
+
+        <div class="subhead">Fabrication phase — local Art &amp; Design students</div>
+        <p>Each student designs their own gate — starting with a pen drawing, ending with a physical miniature laser-cut in brass. They learn to design with structural integrity in mind, then integrate their brass panel into a larger model framework using styrene, carbon-fibre dowling, acrylic and flock.</p>
+
+        <div class="subhead">Proposed educational partners</div>
+        <p class="soft" style="font-size: 9.5pt;">Bishop Thomas Grant Sixth Form, Streatham · La Retraite Sixth Form, Clapham Park · Lambeth College, Clapham Common — prioritised by proximity and the relevance of their Art and Design provision.</p>
+      </div>
+      <div style="display: grid; grid-template-rows: 1fr 1fr; gap: 4mm;">
+        <figure class="fill"><img src="img/img-014.jpg" class="img-fit" alt=""></figure>
+        <figure class="fill"><img src="img/img-015.jpg" class="img-fit" alt=""></figure>
+      </div>
+    </div>
+    <div class="slide-ftr">
+      <div class="wordmark">Rona</div>
+      <div>07 / 08</div>
+    </div>
+  </section>
+
+  <!-- ───────────── 08 · BUDGET & RISK ───────────── -->
+  <section class="slide">
+    <div class="slide-hdr">
+      <div><span class="num">08</span>Budget &amp; Risk</div>
+      <div>Springfield Village Southern Gateway</div>
+    </div>
+    <div class="slide-body cols-2">
+      <div>
+        <h2 class="title">Budget.</h2>
+        <div class="label-row" style="margin-top: 4mm;">Artist fee</div>
+        <table>
+          <tbody>
+            <tr><td>Research, project management, design development, engagement, liaison</td><td class="num">£18,000</td></tr>
+          </tbody>
+        </table>
+
+        <div class="label-row" style="margin-top: 6mm;">Incurred costs</div>
+        <table>
+          <tbody>
+            <tr><td>Materials, fabrication, engraving, plaque, delivery &amp; installation</td><td class="num">£36,335</td></tr>
+            <tr><td>CAD drawings and calculations</td><td class="num">£2,000</td></tr>
+            <tr><td>Engagement materials</td><td class="num">£800</td></tr>
+            <tr><td>Contingency (10%)</td><td class="num">£3,915</td></tr>
+          </tbody>
+          <tfoot><tr><td>Total incurred costs</td><td class="num">£43,050</td></tr></tfoot>
+        </table>
+
+        <table style="margin-top: 5mm;">
+          <tbody>
+            <tr><td><strong>Total</strong></td><td class="num"><strong>£61,050 + VAT</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h2 class="title">Key risks.</h2>
+        <dl class="risks">
+          <dt>Material / fabrication delays (steel lead times)</dt>
+          <dd>Pre-order materials at contract signing; 3-week buffer in the Aug–Dec fabrication window.</dd>
+
+          <dt>Site interface mismatch (brick wall / railings vary from drawings)</dt>
+          <dd>Physical site survey and laser-measure before finalising drawings; connection posts detailed with 50 mm tolerance.</dd>
+
+          <dt>Structural integrity &amp; wind loading</dt>
+          <dd>Formal calculations with Fold Engineering. Gate frames engineered for high wind loads and heavy daily use before sign-off.</dd>
+
+          <dt>Coating failure (corrosion adjacent to park foliage)</dt>
+          <dd>High-grade shot-blasting, hot zinc spray and architectural powder coat via Bradleys — prevents rust bleeding onto historic brick piers.</dd>
+
+          <dt>Public safety &amp; aperture trapping</dt>
+          <dd>All segment voids verified at digital drafting; 100 mm maximum aperture sphere clearance maintained throughout.</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="slide-ftr">
+      <div class="wordmark">Rona</div>
+      <div>08 / 08</div>
+    </div>
+  </section>
+
+</body>
+</html>
